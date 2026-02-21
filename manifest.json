@@ -1,12 +1,17 @@
 {
-  "name": "Lyrics Misic",
-  "short_name": "Lyrics Music | SANN404 FORUM",
-  "description": "Aplikasi Lyric Music Moderen by SANN404 FORUM",
+  "name": "Lyrics Music",
+  "short_name": "Lyrics Music",
+  "description": "Aplikasi Lyrics Music Moderen by SANN404 FORUM",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#121212",
   "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/174/174872.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
     {
       "src": "https://cdn-icons-png.flaticon.com/512/174/174872.png",
       "sizes": "512x512",

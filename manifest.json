@@ -1,6 +1,6 @@
 {
-  "name": "Lyrics Music",
-  "short_name": "Lyrics Music",
+  "name": "SANN404 FORUM Lyrics",
+  "short_name": "SANN Lyrics",
   "description": "Aplikasi Lyrics Music Moderen by SANN404 FORUM",
   "start_url": "/",
   "display": "standalone",
@@ -10,12 +10,14 @@
     {
       "src": "https://cdn-icons-png.flaticon.com/512/174/174872.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "https://cdn-icons-png.flaticon.com/512/174/174872.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

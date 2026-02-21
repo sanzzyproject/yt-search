@@ -1,11 +1,14 @@
-const CACHE_NAME = 'sann404-lyrics-v4';
-const urlsToCache = [ '/', '/index.html', '/manifest.json' ];
-
-self.addEventListener('install', event => {
-  self.skipWaiting();
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
+self.addEventListener('install', (event) => {
+    self.skipWaiting();
 });
 
-self.addEventListener('fetch', event => {
-  event.respondWith(caches.match(event.request).then(response => response || fetch(event.request)));
+self.addEventListener('activate', (event) => {
+    event.waitUntil(clients.claim());
+});
+
+self.addEventListener('fetch', (event) => {
+    // Service worker pass-through (membiarkan PWA berjalan online)
+    event.respondWith(fetch(event.request).catch(() => {
+        return new Response('Aplikasi offline, harap periksa koneksi internet Anda.');
+    }));
 });

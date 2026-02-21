@@ -95,6 +95,7 @@
             grid-template-columns: 48px 1fr 24px;
             gap: 12px;
             align-items: center;
+            cursor: pointer;
         }
         .v-img {
             width: 48px; height: 48px;
@@ -151,9 +152,19 @@
         }
 
         /* --- HALAMAN PENCARIAN (SEARCH VIEW) --- */
-        .search-header {
+        .search-header-container {
             padding: 40px 16px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .search-header-container h1 {
             font-size: 24px; font-weight: 700;
+        }
+        .camera-icon {
+            margin-left: auto;
+            width: 28px; height: 28px;
+            fill: white;
         }
         .search-box-wrapper {
             margin: 0 16px 20px;
@@ -166,6 +177,42 @@
             width: 100%; padding: 14px 14px 14px 44px;
             border-radius: 4px; border: none; font-size: 15px; font-weight: 500;
             background: white; color: black; outline: none;
+        }
+
+        /* Kategori Grid Pencarian ala Spotify */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 0 16px;
+            margin-bottom: 30px;
+        }
+        .category-card {
+            border-radius: 8px;
+            padding: 12px 12px 0 12px;
+            height: 95px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .category-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            z-index: 2;
+            position: relative;
+            line-height: 1.2;
+        }
+        .category-img {
+            position: absolute;
+            right: -15px;
+            bottom: -5px;
+            width: 65px;
+            height: 65px;
+            transform: rotate(25deg);
+            border-radius: 4px;
+            box-shadow: -4px 4px 10px rgba(0,0,0,0.3);
+            object-fit: cover;
         }
 
         /* --- HALAMAN ARTIS KHUSUS --- */
@@ -195,6 +242,7 @@
         .nav-item {
             color: var(--text-sub); text-decoration: none; font-size: 10px;
             display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;
+            transition: color 0.2s;
         }
         .nav-item.active { color: var(--text-main); }
         .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
@@ -209,7 +257,7 @@
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .modal-header {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 30px 20px 20px;
+            padding: 40px 20px 20px;
         }
         .modal-body {
             flex: 1; overflow-y: auto; padding: 0 24px 60px;
@@ -241,29 +289,40 @@
         </div>
 
         <div class="section-container">
+            <h2 class="section-title">Baru diputar</h2>
+            <div class="horizontal-scroll" id="rowBaru"></div>
+        </div>
+
+        <div class="section-container">
             <h2 class="section-title">Dibuat Untuk TikTok</h2>
             <div class="horizontal-scroll" id="rowTiktok"></div>
         </div>
 
         <div class="section-container">
-            <h2 class="section-title">Hits Global Terkini</h2>
-            <div class="horizontal-scroll" id="rowGlobal"></div>
-        </div>
-
-        <div class="section-container">
-            <h2 class="section-title">Artis Terpopuler</h2>
+            <h2 class="section-title">Artis Terpopuler Saat Ini</h2>
             <div class="horizontal-scroll" id="rowArtists"></div>
         </div>
     </div>
 
     <div id="view-search" class="view-section">
-        <h1 class="search-header">Cari</h1>
+        <div class="search-header-container">
+            <div class="profile-icon" style="background-color: #ff5722;">T</div>
+            <h1>Cari</h1>
+            <svg class="camera-icon" viewBox="0 0 24 24"><path d="M12 16a4 4 0 100-8 4 4 0 000 8zm0-2a2 2 0 110-4 2 2 0 010 4zM2.85 7h3.3l1.55-2.5h8.6L17.85 7h3.3C22.25 7 23 7.75 23 8.85v10.3c0 1.1-.75 1.85-1.85 1.85H2.85C1.75 21 1 20.25 1 19.15V8.85C1 7.75 1.75 7 2.85 7zm0 12h18.3V9H2.85v10z"></path></svg>
+        </div>
+        
         <div class="search-box-wrapper">
             <svg class="search-icon-input" viewBox="0 0 24 24"><path d="M10.533 1.279c-5.18 0-9.407 4.14-9.407 9.279s4.226 9.279 9.407 9.279c2.234 0 4.29-.77 5.907-2.058l4.353 4.353a1 1 0 101.414-1.414l-4.344-4.344a9.157 9.157 0 002.077-5.816c0-5.14-4.226-9.279-9.407-9.279zm-7.407 9.279c0-4.006 3.302-7.279 7.407-7.279s7.407 3.273 7.407 7.279-3.302 7.279-7.407 7.279-7.407-3.273-7.407-7.279z"></path></svg>
-            <input type="text" class="search-box" id="searchInput" placeholder="Artis, lagu, atau podcast">
+            <input type="text" class="search-box" id="searchInput" placeholder="Apa yang ingin kamu dengarkan?">
         </div>
-        <div class="section-container">
-            <h2 class="section-title" id="searchStatusTitle">Jelajahi semua</h2>
+
+        <div id="searchCategoriesUI">
+            <h2 class="section-title">Jelajahi semua</h2>
+            <div class="category-grid" id="categoryGrid">
+                </div>
+        </div>
+
+        <div id="searchResultsUI" style="display: none;">
             <div class="vertical-list" id="searchResults"></div>
         </div>
     </div>
@@ -316,7 +375,7 @@
     </div>
 
     <script>
-        // --- 1. SISTEM NAVIGASI (Pindah Halaman) ---
+        // --- 1. SISTEM NAVIGASI ---
         function switchView(viewName) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.getElementById('view-' + viewName).classList.add('active');
@@ -332,7 +391,6 @@
         // --- 2. RENDER KOMPONEN UI ---
         const dotsSvg = '<svg class="dots-icon" viewBox="0 0 24 24"><path d="M4.5 13.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-7.5 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>';
         
-        // Format List Vertikal (Sering Diputar / Hasil Cari)
         function createListHTML(track) {
             const img = track.thumbnails ? track.thumbnails[track.thumbnails.length - 1].url : '';
             const artist = track.artists ? track.artists.map(a => a.name).join(', ') : 'Unknown';
@@ -348,15 +406,13 @@
             `;
         }
 
-        // Format Card Horizontal (Beranda)
         function createCardHTML(track, isArtist = false) {
             const img = track.thumbnails ? track.thumbnails[track.thumbnails.length - 1].url : '';
             const artist = track.artists ? track.artists.map(a => a.name).join(', ') : 'Unknown';
             
-            // Jika mode artis, klik akan membuka halaman khusus artis
-            const clickAction = isArtist ? `openArtistView('${artist}')` : `getLyrics('${track.videoId}')`;
+            const clickAction = isArtist ? `openArtistView('${track.title}')` : `getLyrics('${track.videoId}')`;
             const imgClass = isArtist ? 'h-img artist-img' : 'h-img';
-            const title = isArtist ? artist : track.title;
+            const title = track.title;
             const sub = isArtist ? 'Artis' : artist;
 
             return `
@@ -368,14 +424,40 @@
             `;
         }
 
-        // --- 3. LOGIKA FETCH DATA DARI API ---
+        // --- 3. FETCH DATA BERANDA (DENGAN FILTER ANTI DUPLIKAT ARTIS) ---
         async function fetchAndRender(query, containerId, formatType, isArtist = false) {
             try {
                 const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
                 const result = await response.json();
                 
                 if (result.status === 'success') {
-                    const tracks = formatType === 'list' ? result.data.slice(0, 4) : result.data.slice(0, 8);
+                    let tracks = result.data;
+
+                    // Logika khusus untuk menghilangkan duplikat pada Artis
+                    if (isArtist) {
+                        const uniqueArtists = [];
+                        const seenNames = new Set();
+                        
+                        for (const track of tracks) {
+                            if (track.artists && track.artists.length > 0) {
+                                const artistName = track.artists[0].name;
+                                // Jika artis belum ada di list, masukkan!
+                                if (!seenNames.has(artistName)) {
+                                    seenNames.add(artistName);
+                                    uniqueArtists.push({
+                                        title: artistName, // Jadikan nama artis sebagai title card
+                                        thumbnails: track.thumbnails,
+                                        videoId: track.videoId
+                                    });
+                                }
+                            }
+                        }
+                        tracks = uniqueArtists;
+                    }
+
+                    // Potong array sesuai kebutuhan (List butuh 4, Card butuh 8)
+                    tracks = tracks.slice(0, formatType === 'list' ? 4 : 8);
+                    
                     let html = '';
                     tracks.forEach(track => {
                         html += formatType === 'list' ? createListHTML(track) : createCardHTML(track, isArtist);
@@ -387,38 +469,65 @@
             }
         }
 
-        // Memuat seluruh data beranda sekaligus secara dinamis
         function loadHomeData() {
-            // Sering diputar (List 4 item)
-            fetchAndRender('lagu hits indonesia 2024', 'recentList', 'list');
-            // Tangga Lagu (Card horizontal)
-            fetchAndRender('top 50 indonesia playlist', 'rowCharts', 'card');
-            // TikTok (Card horizontal)
-            fetchAndRender('lagu tiktok viral', 'rowTiktok', 'card');
-            // Global (Card horizontal)
-            fetchAndRender('global top 50 hits', 'rowGlobal', 'card');
-            // Artis (Card horizontal - pakai style lingkaran bulat)
-            fetchAndRender('mahalini tiara andini tulus', 'rowArtists', 'card', true);
+            fetchAndRender('lagu sering diputar indonesia hits', 'recentList', 'list');
+            fetchAndRender('top 50 indonesia playlist update terbaru', 'rowCharts', 'card');
+            fetchAndRender('lagu viral terbaru 2026', 'rowBaru', 'card');
+            fetchAndRender('lagu fyp tiktok viral jedag jedug', 'rowTiktok', 'card');
+            // Query untuk mendapatkan ragam penyanyi terkenal tanpa duplikat
+            fetchAndRender('penyanyi pop indonesia paling hits', 'rowArtists', 'card', true);
         }
 
-        // --- 4. LOGIKA PENCARIAN (TAB CARI) ---
+        // --- 4. RENDER GRID KATEGORI PENCARIAN ---
+        function renderSearchCategories() {
+            const categories = [
+                { title: 'Dibuat Untuk Kamu', color: '#8d67ab', img: 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=100&q=80' },
+                { title: 'Rilis Mendatang', color: '#188653', img: 'https://images.unsplash.com/photo-1493225457124-a1a2a5956093?w=100&q=80' },
+                { title: 'Rilis Baru', color: '#739c18', img: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&q=80' },
+                { title: 'Ramadan', color: '#188653', img: 'https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?w=100&q=80' },
+                { title: 'Pop', color: '#477d95', img: 'https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=100&q=80' },
+                { title: 'Indie', color: '#e1118c', img: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=100&q=80' },
+                { title: 'Musik Indonesia', color: '#e8115b', img: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=100&q=80' },
+                { title: 'Tangga Lagu', color: '#8d67ab', img: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=100&q=80' },
+                { title: 'Peringkat Podcast', color: '#1e3264', img: 'https://images.unsplash.com/photo-1593697821252-0c9137d9fc45?w=100&q=80' },
+                { title: 'K-pop', color: '#e8115b', img: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&q=80' }
+            ];
+
+            let html = '';
+            categories.forEach(cat => {
+                html += `
+                    <div class="category-card" style="background-color: ${cat.color};">
+                        <div class="category-title">${cat.title}</div>
+                        <img src="${cat.img}" class="category-img" alt="Cover">
+                    </div>
+                `;
+            });
+            document.getElementById('categoryGrid').innerHTML = html;
+        }
+
+        // --- 5. LOGIKA INPUT PENCARIAN DINAMIS ---
         let searchTimeout;
         const searchInput = document.getElementById('searchInput');
         searchInput.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
             const query = e.target.value.trim();
+            const resultsUI = document.getElementById('searchResultsUI');
+            const categoriesUI = document.getElementById('searchCategoriesUI');
             const resultsContainer = document.getElementById('searchResults');
-            const statusTitle = document.getElementById('searchStatusTitle');
 
             if (query.length === 0) {
-                resultsContainer.innerHTML = '';
-                statusTitle.innerText = "Jelajahi semua";
+                // Tampilkan Grid kembali jika input kosong
+                categoriesUI.style.display = 'block';
+                resultsUI.style.display = 'none';
                 return;
             }
 
+            // Sembunyikan Grid dan tampilkan Hasil
+            categoriesUI.style.display = 'none';
+            resultsUI.style.display = 'block';
+
             searchTimeout = setTimeout(async () => {
-                resultsContainer.innerHTML = '<div style="color:var(--text-sub); text-align:center;">Mencari...</div>';
-                statusTitle.innerText = `Hasil pencarian untuk "${query}"`;
+                resultsContainer.innerHTML = '<div style="color:var(--text-sub); text-align:center; margin-top: 20px;">Mencari...</div>';
                 
                 try {
                     const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
@@ -432,17 +541,15 @@
             }, 800);
         });
 
-        // --- 5. FITUR KLIK ARTIS (MEMBUKA HALAMAN ARTIS) ---
+        // --- 6. FITUR HALAMAN ARTIS ---
         async function openArtistView(artistName) {
             document.getElementById('artistNameDisplay').innerText = artistName;
             document.getElementById('artistTracksContainer').innerHTML = '<div style="color:var(--text-sub); text-align:center;">Memuat lagu...</div>';
             
-            // Pindah halaman
             switchView('artist');
 
-            // Fetch lagu artis tersebut
             try {
-                const response = await fetch(`/api/search?query=${encodeURIComponent(artistName)}`);
+                const response = await fetch(`/api/search?query=${encodeURIComponent(artistName + " official audio")}`);
                 const result = await response.json();
                 if (result.status === 'success') {
                     let html = '';
@@ -452,13 +559,13 @@
             } catch(e) {}
         }
 
-        // --- 6. LOGIKA LIRIK (BOTTOM SHEET TANPA ALERT) ---
+        // --- 7. LOGIKA LIRIK TERBARU ---
         const lyricsModal = document.getElementById('lyricsModal');
         const lyricsBody = document.getElementById('lyricsBody');
 
         async function getLyrics(videoId) {
             lyricsModal.style.display = 'flex';
-            lyricsBody.innerHTML = '<div style="color:var(--text-sub); font-size: 16px; text-align: center; margin-top: 40px;">Mencari lirik... ⏳</div>';
+            lyricsBody.innerHTML = '<div style="color:var(--text-sub); font-size: 16px; text-align: center; margin-top: 40px;">Menarik data lirik dari server... ⏳</div>';
 
             try {
                 const response = await fetch(`/api/lyrics?video_id=${videoId}`);
@@ -467,7 +574,11 @@
                 if(result.status === 'success' && result.data.lyrics) {
                     lyricsBody.innerHTML = result.data.lyrics;
                 } else {
-                    lyricsBody.innerHTML = '<div style="color:var(--text-sub); font-size: 16px; text-align: center; margin-top: 40px;">Maaf, lirik tidak tersedia untuk lagu ini.</div>';
+                    lyricsBody.innerHTML = `
+                        <div style="color:var(--text-sub); font-size: 16px; text-align: center; margin-top: 40px;">
+                            Wah, lirik belum tersedia di database pusat.<br>
+                            <span style="font-size: 13px; margin-top:10px; display:inline-block;">(Lagu ini mungkin instrumental atau belum memiliki lirik resmi).</span>
+                        </div>`;
                 }
             } catch(e) {
                 lyricsBody.innerHTML = '<div style="color:#ff5252; font-size: 16px; text-align: center; margin-top: 40px;">Gagal memuat lirik. Periksa koneksi internet Anda.</div>';
@@ -479,8 +590,11 @@
             lyricsBody.innerHTML = '';
         }
 
-        // Eksekusi data pertama kali
-        window.onload = loadHomeData;
+        // Jalankan saat web dibuka
+        window.onload = () => {
+            loadHomeData();
+            renderSearchCategories();
+        };
     </script>
 </body>
 </html>

@@ -175,6 +175,85 @@
             padding: 20px;
             display: none;
         }
+
+        /* Modal Lirik UI Modern */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: flex-end; /* Bottom sheet style */
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: var(--surface-color);
+            width: 100%;
+            height: 75vh;
+            border-radius: 30px 30px 0 0;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease-out;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            color: var(--text-primary);
+            font-size: 18px;
+            line-height: 1.8;
+            white-space: pre-wrap; /* Penting untuk format lirik */
+            padding-bottom: 40px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -189,8 +268,8 @@
     </div>
 
     <div class="content-section">
-        <h2 class="section-title" id="statusTitle">Lagu Populer</h2>
-        <div id="loader" class="loader">Memuat data dari server...</div>
+        <h2 class="section-title" id="statusTitle">Rekomendasi Untukmu</h2>
+        <div id="loader" class="loader">Memuat data...</div>
         <div class="track-list" id="resultsContainer"></div>
     </div>
 
@@ -200,11 +279,23 @@
         <div class="nav-item">📚 Library</div>
     </nav>
 
+    <div id="lyricsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Lirik Lagu</h3>
+                <button class="close-btn" onclick="closeLyrics()">✕</button>
+            </div>
+            <div id="lyricsBody" class="modal-body"></div>
+        </div>
+    </div>
+
     <script>
         const searchInput = document.getElementById('searchInput');
         const resultsContainer = document.getElementById('resultsContainer');
         const statusTitle = document.getElementById('statusTitle');
         const loader = document.getElementById('loader');
+        const lyricsModal = document.getElementById('lyricsModal');
+        const lyricsBody = document.getElementById('lyricsBody');
 
         function createTrackElement(title, artist, imgUrl, videoId) {
             return `
@@ -219,17 +310,19 @@
             `;
         }
 
+        // Fix Beranda: Menggunakan API pencarian yang sudah terbukti bekerja untuk menampilkan rekomendasi
         async function loadCharts() {
             loader.style.display = 'block';
             resultsContainer.innerHTML = '';
-            statusTitle.innerText = "Lagu Trending";
+            statusTitle.innerText = "Rekomendasi Untukmu";
 
             try {
-                const response = await fetch('/api/charts');
+                // Menggunakan query default agar tidak gagal
+                const response = await fetch('/api/search?query=lagu+indonesia+terbaru+hits');
                 const result = await response.json();
                 
-                if (result.status === 'success' && result.data.videos) {
-                    const tracks = result.data.videos.items.slice(0, 10);
+                if (result.status === 'success') {
+                    const tracks = result.data.slice(0, 10);
                     let html = '';
                     tracks.forEach(track => {
                         const img = track.thumbnails ? track.thumbnails[track.thumbnails.length - 1].url : '';
@@ -239,7 +332,7 @@
                     resultsContainer.innerHTML = html;
                 }
             } catch (error) {
-                resultsContainer.innerHTML = '<p style="color: #ff5252;">Gagal memuat data dari server API.</p>';
+                resultsContainer.innerHTML = '<p style="color: #ff5252;">Gagal memuat rekomendasi.</p>';
             }
             loader.style.display = 'none';
         }
@@ -279,19 +372,29 @@
             }, 800);
         });
 
+        // Fix Lirik: Menampilkan modal secara instan agar terasa dipercepat, lalu mengambil data lirik
         async function getLyrics(videoId) {
-            alert("Sedang mencari lirik...");
+            lyricsModal.style.display = 'flex';
+            lyricsBody.innerHTML = '<div style="margin-top: 50px; color: var(--text-secondary);">Mencari lirik... ⏳</div>';
+
             try {
                 const response = await fetch(`/api/lyrics?video_id=${videoId}`);
                 const result = await response.json();
+                
                 if(result.status === 'success' && result.data.lyrics) {
-                    alert(result.data.lyrics);
+                    lyricsBody.innerHTML = result.data.lyrics;
                 } else {
-                    alert("Lirik tidak tersedia untuk lagu ini.");
+                    lyricsBody.innerHTML = '<div style="margin-top: 50px; color: #ff5252;">Maaf, lirik tidak tersedia untuk lagu ini.</div>';
                 }
             } catch(e) {
-                alert("Gagal mengambil lirik.");
+                lyricsBody.innerHTML = '<div style="margin-top: 50px; color: #ff5252;">Gagal mengambil lirik. Periksa koneksi internet Anda.</div>';
             }
+        }
+
+        // Fungsi untuk menutup modal lirik
+        function closeLyrics() {
+            lyricsModal.style.display = 'none';
+            lyricsBody.innerHTML = '';
         }
 
         window.onload = loadCharts;

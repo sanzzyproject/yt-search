@@ -30,7 +30,8 @@
             background-color: var(--bg-base);
             color: var(--text-main);
             overflow-x: hidden;
-            padding-bottom: 90px;
+            /* FIX: Jarak bawah disesuaikan agar pas dengan navbar yang lebih kecil */
+            padding-bottom: 75px; 
         }
 
         /* --- SISTEM TAMPILAN HALAMAN --- */
@@ -115,11 +116,17 @@
         .lib-item-sub { font-size: 13px; color: var(--text-sub); display: flex; align-items: center; gap: 6px; }
         .pin-icon { fill: var(--spotify-green); width: 12px; height: 12px; transform: rotate(45deg); }
 
-        /* --- BOTTOM NAVIGATION --- */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.9) 20%, #000); display: flex; justify-content: space-around; padding: 12px 0 16px; z-index: 1000; }
+        /* --- BOTTOM NAVIGATION (FIX: Diperkecil agar lebih standar) --- */
+        .bottom-nav { 
+            position: fixed; bottom: 0; left: 0; right: 0; 
+            background: linear-gradient(transparent, rgba(0,0,0,0.9) 20%, #000); 
+            display: flex; justify-content: space-around; 
+            padding: 8px 0 10px; /* Diperkecil dari sebelumnya 12px 0 16px */
+            z-index: 1000; 
+        }
         .nav-item { color: var(--text-sub); text-decoration: none; font-size: 10px; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; transition: color 0.2s; }
         .nav-item.active { color: var(--text-main); }
-        .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+        .nav-item svg { width: 22px; height: 22px; fill: currentColor; } /* Ikon diperkecil sedikit */
 
         /* --- MODALS LIRIK & PLAYLIST --- */
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 2000; display: none; flex-direction: column; animation: slideUp 0.3s cubic-bezier(0.1, 0.9, 0.2, 1); background-color: #121212; overflow: hidden; }
@@ -153,9 +160,10 @@
         .lyric-btn.liked { fill: var(--spotify-green); }
         .icon-lyrics { fill: black; width: 24px; height: 24px; }
 
-        /* --- UPDATE UI DEVELOPER YANG LEBIH MEWAH --- */
+        /* --- UPDATE UI DEVELOPER YANG LEBIH MEWAH & FIX POTONG --- */
         .dev-hero { background: linear-gradient(180deg, #1e3264 0%, var(--bg-base) 100%); padding: 60px 16px 20px; text-align: center; position: relative; }
-        .dev-profile-pic { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--bg-base); box-shadow: 0 8px 24px rgba(0,0,0,0.6); object-fit: cover; margin: -55px auto 16px; display: block; background: #282828; }
+        /* FIX: Menambahkan z-index agar foto profil developer tidak terpotong background */
+        .dev-profile-pic { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--bg-base); box-shadow: 0 8px 24px rgba(0,0,0,0.6); object-fit: cover; margin: -55px auto 16px; display: block; background: #282828; position: relative; z-index: 2; }
         .dev-badge { background: rgba(30,215,96,0.15); padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; display: inline-block; margin-bottom: 20px; color: var(--spotify-green); border: 1px solid rgba(30,215,96,0.3); }
         
         .dev-card { background: #181818; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.05); }
@@ -171,9 +179,10 @@
         .dev-cta-btn { display: flex; justify-content: center; align-items: center; gap: 8px; background: white; color: black; padding: 14px 24px; border-radius: 24px; text-decoration: none; font-weight: 700; font-size: 15px; width: 100%; margin-top: 10px; transition: transform 0.2s; border: none; cursor: pointer; }
         .dev-cta-btn:active { transform: scale(0.98); }
         
-        .install-pwa-btn { background: var(--spotify-green); color: black; display: none; margin-bottom: 16px; } /* Disembunyikan, akan muncul otomatis jika bisa diinstall */
+        .install-pwa-btn { background: var(--spotify-green); color: black; display: none; margin-bottom: 16px; } 
         
-        .dev-footer-text { text-align: center; font-size: 12px; color: #535353; margin: 30px 0 100px; line-height: 1.5; }
+        /* FIX: Tambahan jarak bawah agar konten terakhir tidak tertutup bottom nav */
+        .dev-footer-text { text-align: center; font-size: 12px; color: #535353; margin: 30px 0 80px; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -417,18 +426,17 @@
             });
         }
         
-        // Logika Untuk Menampilkan Tombol Install App
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); // Mencegah prompt otomatis browser
+            e.preventDefault(); 
             deferredPrompt = e;
             const installBtn = document.getElementById('installAppBtn');
             if(installBtn) {
-                installBtn.style.display = 'flex'; // Munculkan tombol di halaman Developer
+                installBtn.style.display = 'flex'; 
                 installBtn.addEventListener('click', async () => {
                     deferredPrompt.prompt();
                     const { outcome } = await deferredPrompt.userChoice;
                     if(outcome === 'accepted') {
-                        installBtn.style.display = 'none'; // Sembunyikan setelah berhasil
+                        installBtn.style.display = 'none'; 
                     }
                     deferredPrompt = null;
                 });
@@ -456,6 +464,8 @@
             else if (viewName === 'search') navItems[1].classList.add('active');
             else if (viewName === 'library') { navItems[2].classList.add('active'); renderLibraryUI(); }
             else if (viewName === 'developer') navItems[3].classList.add('active'); 
+            
+            window.scrollTo(0,0);
         }
 
         // --- 3. RENDER KOMPONEN UI ---

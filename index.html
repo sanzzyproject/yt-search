@@ -43,11 +43,13 @@
             padding: 16px; display: flex; align-items: center; gap: 12px;
             position: sticky; top: 0; background: var(--bg-base); z-index: 50;
         }
+        
+        /* FIX: Profile Icon sekarang berupa Image */
         .profile-icon {
-            width: 32px; height: 32px; background-color: #ff5722; color: white;
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-weight: bold; font-size: 14px; flex-shrink: 0;
+            width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+            flex-shrink: 0; cursor: pointer; background-color: #282828;
         }
+        
         .pill {
             background-color: #2a2a2a; color: white; padding: 8px 16px;
             border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer;
@@ -161,22 +163,17 @@
 
     <div id="view-home" class="view-section active">
         <div class="home-header">
-            <div class="profile-icon">T</div>
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" class="profile-icon" alt="Profile">
             <div class="pill active">Semua</div>
             <div class="pill">Lirik</div>
             <div class="pill">Podcast</div>
         </div>
         
         <div class="section-container"><h2 class="section-title">Sering kamu lihat liriknya</h2><div class="vertical-list" id="recentList"><div style="color:#a7a7a7; font-size: 13px;">Memuat data...</div></div></div>
-        
         <div class="section-container"><h2 class="section-title">Lirik Anyar (Baru Rilis)</h2><div class="horizontal-scroll" id="rowAnyar"></div></div>
-        
         <div class="section-container"><h2 class="section-title">Gembira & Semangat</h2><div class="horizontal-scroll" id="rowGembira"></div></div>
-        
         <div class="section-container"><h2 class="section-title">Tangga Lirik Populer</h2><div class="horizontal-scroll" id="rowCharts"></div></div>
-        
         <div class="section-container"><h2 class="section-title">Lirik Galau Terpopuler</h2><div class="horizontal-scroll" id="rowGalau"></div></div>
-        
         <div class="section-container"><h2 class="section-title">Baru dilihat liriknya</h2><div class="horizontal-scroll" id="rowBaru"></div></div>
         <div class="section-container"><h2 class="section-title">Lirik Viral TikTok</h2><div class="horizontal-scroll" id="rowTiktok"></div></div>
         <div class="section-container"><h2 class="section-title">Artis Terpopuler Saat Ini</h2><div class="horizontal-scroll" id="rowArtists"></div></div>
@@ -186,7 +183,7 @@
 
     <div id="view-search" class="view-section">
         <div class="search-header-container">
-            <div class="profile-icon">T</div>
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" class="profile-icon" alt="Profile">
             <h1>Cari</h1>
             <svg class="camera-icon" viewBox="0 0 24 24"><path d="M12 16a4 4 0 100-8 4 4 0 000 8zm0-2a2 2 0 110-4 2 2 0 010 4zM2.85 7h3.3l1.55-2.5h8.6L17.85 7h3.3C22.25 7 23 7.75 23 8.85v10.3c0 1.1-.75 1.85-1.85 1.85H2.85C1.75 21 1 20.25 1 19.15V8.85C1 7.75 1.75 7 2.85 7zm0 12h18.3V9H2.85v10z"></path></svg>
         </div>
@@ -204,7 +201,7 @@
     <div id="view-library" class="view-section">
         <div class="lib-header">
             <div class="lib-header-left">
-                <div class="profile-icon">T</div>
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" class="profile-icon" alt="Profile">
                 <h1 class="lib-title">Koleksi Kamu</h1>
             </div>
             <div class="lib-actions">
@@ -251,7 +248,7 @@
             <h1 id="playlistNameDisplay" style="font-size: 26px; font-weight: 700; text-align: left; margin-bottom: 8px;">Nama Playlist</h1>
             <div style="font-size: 14px; color: var(--text-sub); margin-bottom: 10px;">Enjoy your Lyrics</div>
             <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                <div class="profile-icon" style="width: 24px; height: 24px; font-size: 10px;">S</div>
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" class="profile-icon" style="width: 24px; height: 24px;" alt="Profile">
                 <span style="font-size: 14px; font-weight: 700;">SANN404 FORUM</span>
             </div>
             <div id="playlistStatsDisplay" style="font-size: 13px; color: var(--text-sub);">16 kali disimpan • 1 j 28 mnt</div>
@@ -275,6 +272,44 @@
         </div>
     </div>
 
+    <div id="view-developer" class="view-section">
+        <div style="padding: 40px 16px 20px; background: linear-gradient(to bottom, #1e3264, var(--bg-base));">
+            <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 8px;">Developer</h1>
+            <p style="color: var(--text-sub); font-size: 14px;">Informasi sistem & teknologi</p>
+        </div>
+        
+        <div class="section-container" style="padding: 0 16px;">
+            <div style="background: #282828; border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+                <h3 style="font-size: 18px; margin-bottom: 12px; color: white;">🚀 Tentang Project</h3>
+                <p style="color: var(--text-sub); font-size: 14px; line-height: 1.6;">
+                    Aplikasi web <b>Lyrics Music</b> ini dikembangkan secara khusus untuk memberikan pengalaman UI/UX moderen layaknya aplikasi native Spotify, dilengkapi dengan sistem penyimpanan offline realtime dan kemampuan PWA (Progressive Web App).
+                </p>
+            </div>
+
+            <div style="background: #282828; border-radius: 8px; padding: 20px; margin-bottom: 16px;">
+                <h3 style="font-size: 18px; margin-bottom: 12px; color: white;">🛠️ Tech Stack & Framework</h3>
+                <ul style="color: var(--text-sub); font-size: 14px; line-height: 1.8; padding-left: 20px;">
+                    <li><b>Frontend UI:</b> HTML5, CSS3 Modern</li>
+                    <li><b>Frontend Logic:</b> Vanilla JavaScript</li>
+                    <li><b>Backend Framework:</b> FastAPI (Python)</li>
+                    <li><b>Library API Core:</b> ytmusicapi</li>
+                    <li><b>Database:</b> IndexedDB (Offline Native Storage)</li>
+                    <li><b>Deployment Server:</b> Vercel Serverless Functions</li>
+                </ul>
+            </div>
+
+            <div style="background: #282828; border-radius: 8px; padding: 20px; text-align: center; margin-bottom: 30px;">
+                <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 12px; object-fit: cover; border: 2px solid var(--spotify-green);">
+                <h3 style="font-size: 20px; color: white; margin-bottom: 4px;">SANN404 FORUM</h3>
+                <p style="color: var(--text-sub); font-size: 13px; margin-bottom: 20px;">Lead Developer & UI/UX Designer</p>
+                
+                <a href="#" target="_blank" style="display: inline-block; background: var(--spotify-green); color: black; padding: 12px 24px; border-radius: 24px; text-decoration: none; font-weight: 700; font-size: 14px; width: 100%; transition: transform 0.2s;">
+                    Join Saluran WhatsApp Dev
+                </a>
+            </div>
+        </div>
+    </div>
+
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="switchView('home')">
             <svg viewBox="0 0 24 24"><path d="M12.5 3.247a1 1 0 00-1 0L4 7.577V20h4.5v-6a1 1 0 011-1h5a1 1 0 011 1v6H20V7.577l-7.5-4.33zm-2-1.732a3 3 0 013 0l7.5 4.33a2 2 0 011 1.732V21a1 1 0 01-1 1h-6.5a1 1 0 01-1-1v-6h-3v6a1 1 0 01-1 1H3a1 1 0 01-1-1V7.577a2 2 0 011-1.732l7.5-4.33z"></path></svg> Home
@@ -285,14 +320,13 @@
         <div class="nav-item" onclick="switchView('library')">
             <svg viewBox="0 0 24 24"><path d="M14.5 2.134a1 1 0 011 0l6 3.464a1 1 0 01.5.866V21a1 1 0 01-1 1h-6a1 1 0 01-1-1V3a1 1 0 01.5-.866zM16 4.732V20h4V7.041l-4-2.309zM3 22a1 1 0 01-1-1V3a1 1 0 012 0v18a1 1 0 01-1 1zm6 0a1 1 0 01-1-1V3a1 1 0 012 0v18a1 1 0 01-1 1z"></path></svg> Koleksi Kamu
         </div>
-        <div class="nav-item">
-            <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.625.625 0 01-.858.205c-2.35-1.435-5.305-1.76-8.785-.965a.625.625 0 11-.286-1.216c3.818-.87 7.075-.5 9.724 1.118.307.188.404.58.205.858zm1.22-2.73a.78.78 0 01-1.074.256c-2.71-1.666-6.87-2.14-9.845-1.173a.781.781 0 11-.482-1.486c3.428-1.114 8.01-.58 11.145 1.33a.78.78 0 01.256 1.073zm.12-2.845C14.71 8.94 8.52 8.71 4.965 9.79a.976.976 0 11-.57-1.864c4.075-1.24 10.9-1.004 14.653 1.222a.976.976 0 01-.913 1.68x"></path></svg> Premium
+        <div class="nav-item" onclick="switchView('developer')">
+            <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"></path></svg> Developer
         </div>
     </nav>
 
     <div id="lyricsModal" class="modal-overlay">
         <div id="lyricsBg"></div>
-        
         <div class="lyrics-content-wrapper">
             <div class="modal-header">
                 <h3 style="text-transform:uppercase; font-size: 14px; letter-spacing: 1px; color:white;">Lirik</h3>
@@ -371,6 +405,8 @@
             if(viewName === 'home') navItems[0].classList.add('active');
             else if (viewName === 'search') navItems[1].classList.add('active');
             else if (viewName === 'library') { navItems[2].classList.add('active'); renderLibraryUI(); }
+            // Menambahkan logika navigasi untuk Developer tab
+            else if (viewName === 'developer') navItems[3].classList.add('active'); 
         }
 
         // --- 3. RENDER KOMPONEN UI ---
@@ -496,7 +532,7 @@
             } catch(e) {}
         }
 
-        // --- 5. LOGIKA LIRIK & LIKE LAGU (UPDATE UI MEWAH) ---
+        // --- 5. LOGIKA LIRIK & LIKE LAGU ---
         const lyricsModal = document.getElementById('lyricsModal');
         const lyricsBody = document.getElementById('lyricsBody');
         const btnLikeSong = document.getElementById('btnLikeSong');
@@ -505,12 +541,9 @@
             currentTrack = JSON.parse(decodeURIComponent(encodedTrackData));
             checkIfLiked(currentTrack.videoId);
 
-            // Update Header Info Lirik
             document.getElementById('lyricsTrackImg').src = currentTrack.img;
             document.getElementById('lyricsTrackTitle').innerText = currentTrack.title;
             document.getElementById('lyricsTrackArtist').innerText = currentTrack.artist;
-            
-            // Set Dynamic Blur Background
             document.getElementById('lyricsBg').style.backgroundImage = `url('${currentTrack.img}')`;
 
             lyricsModal.style.display = 'flex';

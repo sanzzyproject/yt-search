@@ -334,14 +334,15 @@
         const dotsSvg = '<svg class="dots-icon" viewBox="0 0 24 24"><path d="M4.5 13.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm15 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-7.5 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path></svg>';
         let currentTrack = null; 
 
+        // FIX BUG: Gambar & Artis tidak muncul di dalam playlist karena struktur DB dan API berbeda
         function createListHTML(track) {
-            const img = track.thumbnails ? track.thumbnails[track.thumbnails.length - 1].url : '';
-            const artist = track.artists ? track.artists.map(a => a.name).join(', ') : 'Unknown';
+            const img = track.img ? track.img : (track.thumbnails ? track.thumbnails[track.thumbnails.length - 1].url : 'https://via.placeholder.com/48?text=+');
+            const artist = track.artist ? track.artist : (track.artists ? track.artists.map(a => a.name).join(', ') : 'Unknown');
             const trackData = encodeURIComponent(JSON.stringify({videoId: track.videoId, title: track.title, artist: artist, img: img}));
             
             return `
                 <div class="v-item" onclick="getLyrics('${track.videoId}', '${trackData}')">
-                    <img src="${img}" class="v-img">
+                    <img src="${img}" class="v-img" onerror="this.src='https://via.placeholder.com/48?text=+'">
                     <div class="v-info">
                         <div class="v-title">${track.title}</div>
                         <div class="v-sub">${artist}</div>
@@ -351,10 +352,9 @@
             `;
         }
 
-        // FUNGSI INI DIKEMBALIKAN UNTUK MEMANGGIL HALAMAN ARTIS
         function createCardHTML(track, isArtist = false) {
-            const img = track.thumbnails ? track.thumbnails[track.thumbnails.length - 1].url : '';
-            const artist = track.artists ? track.artists.map(a => a.name).join(', ') : 'Unknown';
+            const img = track.img ? track.img : (track.thumbnails ? track.thumbnails[track.thumbnails.length - 1].url : 'https://via.placeholder.com/140?text=+');
+            const artist = track.artist ? track.artist : (track.artists ? track.artists.map(a => a.name).join(', ') : 'Unknown');
             const trackData = encodeURIComponent(JSON.stringify({videoId: track.videoId, title: track.title, artist: artist, img: img}));
             
             const clickAction = isArtist ? `openArtistView('${track.title}')` : `getLyrics('${track.videoId}', '${trackData}')`;
@@ -362,7 +362,7 @@
 
             return `
                 <div class="h-card" onclick="${clickAction}">
-                    <img src="${img}" class="${imgClass}">
+                    <img src="${img}" class="${imgClass}" onerror="this.src='https://via.placeholder.com/140?text=+'">
                     <div class="h-title">${track.title}</div>
                     <div class="h-sub">${isArtist ? 'Artis' : artist}</div>
                 </div>
@@ -390,7 +390,6 @@
             fetchAndRender('penyanyi pop indonesia paling hits', 'rowArtists', 'card', true);
         }
 
-        // FUNGSI INI DIKEMBALIKAN FULL 10 KATEGORI PENCARIAN
         function renderSearchCategories() {
             const categories = [
                 { title: 'Dibuat Untuk Kamu', color: '#8d67ab', img: 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=100&q=80' },
@@ -435,7 +434,7 @@
             }, 800);
         });
 
-        // --- 4. FITUR HALAMAN ARTIS (DIKEMBALIKAN) ---
+        // --- 4. FITUR HALAMAN ARTIS ---
         async function openArtistView(artistName) {
             document.getElementById('artistNameDisplay').innerText = artistName;
             document.getElementById('artistTracksContainer').innerHTML = '<div style="color:var(--text-sub); text-align:center;">Memuat lagu...</div>';
@@ -517,7 +516,6 @@
             
             req.onsuccess = function() {
                 const likedCount = req.result.length;
-                // FUNGSI INI DIUBAH AGAR PLAYLIST BISA DIKLIK DAN DIBUKA
                 html += `
                     <div class="lib-item" onclick="openPlaylistView('liked')">
                         <div class="lib-item-img liked">
@@ -537,7 +535,7 @@
                     playlists.forEach(p => {
                         html += `
                             <div class="lib-item" onclick="openPlaylistView('${p.id}')">
-                                <img src="${p.img || 'https://via.placeholder.com/120?text=+'}" class="lib-item-img">
+                                <img src="${p.img || 'https://via.placeholder.com/120?text=+'}" class="lib-item-img" onerror="this.src='https://via.placeholder.com/120?text=+'">
                                 <div class="lib-item-info">
                                     <div class="lib-item-title">${p.name}</div>
                                     <div class="lib-item-sub">Playlist • SANN404 FORUM</div>
@@ -566,7 +564,7 @@
             };
         }
 
-        // --- 7. FUNGSI UNTUK MEMBUKA DETAIL PLAYLIST (BARU) ---
+        // --- 7. FUNGSI UNTUK MEMBUKA DETAIL PLAYLIST ---
         function openPlaylistView(id) {
             switchView('playlist');
             const container = document.getElementById('playlistTracksContainer');
@@ -634,7 +632,7 @@
             };
         }
 
-        // --- 9. LOGIKA MENYIMPAN LAGU KE PLAYLIST CUSTOM (BARU) ---
+        // --- 9. LOGIKA MENYIMPAN LAGU KE PLAYLIST CUSTOM ---
         function openAddToPlaylistModal() {
             if(!currentTrack) return;
             const tx = db.transaction("playlists", "readonly");
@@ -644,7 +642,7 @@
                 req.result.forEach(p => {
                     html += `
                         <div class="lib-item" onclick="addTrackToPlaylist('${p.id}')" style="margin-bottom: 12px; cursor: pointer;">
-                            <img src="${p.img || 'https://via.placeholder.com/50'}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+                            <img src="${p.img || 'https://via.placeholder.com/50'}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;" onerror="this.src='https://via.placeholder.com/50'">
                             <div style="color:white; font-size:16px;">${p.name}</div>
                         </div>`;
                 });

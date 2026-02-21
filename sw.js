@@ -1,7 +1,8 @@
-const CACHE_NAME = 'sann404-lyrics-v3';
+const CACHE_NAME = 'sann404-lyrics-v4';
 const urlsToCache = [ '/', '/index.html', '/manifest.json' ];
 
 self.addEventListener('install', event => {
+  self.skipWaiting();
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache)));
 });
 
